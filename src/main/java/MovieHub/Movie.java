@@ -1,29 +1,29 @@
 package MovieHub;
 
-public class SeeAllMovies {
-    int movieId;
-    String movieName;
+public class Movie {
+    int id;
+    String name;
     int releasedYear;
     double rating;
     String description;
 
-    SeeAllMovies(int movieId, String movieName, int releasedYear, double rating){
-        this.movieId = movieId;
-        this.movieName = movieName;
+    Movie(int id, String name, int releasedYear, double rating){
+        this.id = id;
+        this.name = name;
         this.releasedYear = releasedYear;
         this.rating = rating;
     }
 
-    void moviesDetail(){
-        System.out.println("\nMovie ID: " + movieId);
-        System.out.println("Movie Name: " + movieName);
+    void printMovieDetails(){
+        System.out.println("\nMovie ID: " + id);
+        System.out.println("Movie Name: " + name);
         System.out.println("Released Year: " + releasedYear);
         System.out.println("Rating: " + rating);
         System.out.println("\n");
     }
 
     public int getId(){
-        return movieId;
+        return id;
     }
 
     void detailsById(){
@@ -36,27 +36,35 @@ public class SeeAllMovies {
         return rating;
     }
 
-    SeeAllMovies(int movieId, String movieName, int releasedYear, double rating, String description){
-        this.movieId=movieId;
-        this.movieName=movieName;
+    Movie(int id, String name, int releasedYear, double rating, String description){
+        this.id=id;
+        this.name=name;
         this.releasedYear=releasedYear;
         this.rating=rating;
         this.description=description;
     }
 
-    void displayDetails(){
-        System.out.println("\nMovie ID: " + movieId);
-        System.out.println("Movie Name: " + movieName);
+    void displayDetailsWithDescription(){
+        System.out.println("\nMovie ID: " + id);
+        System.out.println("Movie Name: " + name);
         System.out.println("Released Year: " + releasedYear);
         System.out.println("Rating: " + rating);
         System.out.println("Description: " + description);
     }
 
-    public String getMovieName() {
-        return movieName;
+    public String getName() {
+        return name;
     }
 
-    void displayMovieName(){
-        System.out.println(" " +movieId+ ". "+ movieName);
+    void displayIdAndName(){
+        System.out.println(" " +id+ ". "+ name);
+    }
+
+    public int getReleasedYear() {
+        return releasedYear;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
