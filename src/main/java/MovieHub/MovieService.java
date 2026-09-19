@@ -12,7 +12,7 @@ public class MovieService {
     void showMainMenu(){
         System.out.println("\nWelcome to MovieHub!\n");
         System.out.println("1. See all the list of movies");
-        System.out.println("2. See top 10 movies of all time");
+        System.out.println("2. See top movies of all time");
         System.out.println("3. Add a movie");
         System.out.println("4. See your favorites list");
         System.out.println("5. Search a movie\n");
@@ -23,56 +23,13 @@ public class MovieService {
             movie.printMovieDetails();
         }
 
-        System.out.print("\nSelect a movie ID: ");
-        int id=sc.nextInt();
-
-        Movie selectedMovie = null;
-        for(Movie movie: movies){
-            if(movie.getId()==id){
-                selectedMovie=movie;
-                break;
-            }
-        }
-        if(selectedMovie==null){
-            System.out.println("\nThis movie is not found!");
-            return;
-        }
-
-        selectedMovie.detailsById();
-
-        System.out.print("\nNow, What do you want? : ");
-        int option= sc.nextInt();
-
-        if (option == 1) {
-            selectedMovie.displayDetailsWithDescription();
-        }
-        else if (option==2) {
-            boolean alreadyFavorite= false;
-            for(Movie movie: favoriteMovies){
-                if(movie.getId()==selectedMovie.getId()){
-                    System.out.println("\nThis movie is already in your favorite list!");
-                    alreadyFavorite=true;
-                    break;
-                }
-            }
-            if(!alreadyFavorite){
-                favoriteMovies.add(selectedMovie);
-                System.out.println("\nMovie added to your favorite list!");
-            }
-        }
-        else if (option==3){
-            movies.remove(selectedMovie);
-            System.out.println("\nMovie removed from the list!");
-        }
-        else {
-            System.out.println("\nInvalid Option!");
-        }
+        handleMovieSelection(movies, movies);
     }
 
-    void displayTopMovies(List<Movie> movies){
+    void displayTopMovies(List<Movie> movies, int n){
         movies.sort((a,b)->Double.compare(b.getRating(), a.getRating()));
 
-        for(int i=0; i<Math.min(10, movies.size()); i++){
+        for(int i=0; i<Math.min(n, movies.size()); i++){
             movies.get(i).printMovieDetails();
         }
 
@@ -80,46 +37,20 @@ public class MovieService {
         int mId=sc.nextInt();
 
         Movie topSelectedMovie=null;
-        for(int i=0; i<Math.min(10, movies.size()); i++){
+        for(int i=0; i<Math.min(n, movies.size()); i++){
             if(movies.get(i).getId()==mId){
                 topSelectedMovie=movies.get(i);
                 break;
             }
         }
         if(topSelectedMovie==null){
-            System.out.println("\nThis movie is not in the Top 10!");
+            System.out.println("\nThis movie is not in the Top "+n+"!");
             return;
         }
 
         topSelectedMovie.detailsById();
 
-        System.out.print("\nNow, What do you want? : ");
-        int topOption= sc.nextInt();
-
-        if (topOption == 1){
-            topSelectedMovie.displayDetailsWithDescription();
-        }
-        else if (topOption == 2) {
-            boolean alreadyFavorite = false;
-            for(Movie movie: favoriteMovies){
-                if(movie.getId()==topSelectedMovie.getId()){
-                    System.out.println("\nThis movie is already in your favorite list!");
-                    alreadyFavorite=true;
-                    break;
-                }
-            }
-            if(!alreadyFavorite){
-                favoriteMovies.add(topSelectedMovie);
-                System.out.println("\nMovie added to your favorite list!");
-            }
-        }
-        else if (topOption == 3) {
-            movies.remove(topSelectedMovie);
-            System.out.println("\nMovie removed from the list!");
-        }
-        else {
-            System.out.println("\nInvalid Option!");
-        }
+        handleMovieOption(topSelectedMovie, movies);
     }
 
     void addMovie(List<Movie> movies){
@@ -202,10 +133,13 @@ public class MovieService {
         System.out.print("\nEnter the movie name to search: ");
         String searchTitle = sc.nextLine().toLowerCase();
 
+        List<Movie> searchResults = new ArrayList<>();
+
         boolean found = false;
         for (Movie movie : movies) {
             if (movie.getName().toLowerCase().contains(searchTitle)) {
                 movie.displayIdAndName();
+                searchResults.add(movie);
                 found = true;
             }
         }
@@ -214,46 +148,57 @@ public class MovieService {
             return;
         }
 
-        System.out.print("\nSelect a movie ID to view details or add to favorites or remove from the list: ");
-        int m_id = sc.nextInt();
+        handleMovieSelection(searchResults, movies);
+    }
 
-        Movie searchSelectedMovie = null;
-        for (Movie movie : movies) {
-            if (movie.getId() == m_id) {
-                searchSelectedMovie = movie;
+
+    private void handleMovieSelection(List<Movie> searchResults, List<Movie> movies) {
+        System.out.print("\nSelect a movie ID :");
+        int id=sc.nextInt();
+
+        Movie selectedMovie = null;
+        for(Movie movie: searchResults){
+            if(movie.getId()==id){
+                selectedMovie=movie;
+                break;
             }
         }
-        if (searchSelectedMovie == null) {
+        if(selectedMovie==null){
             System.out.println("\nThis movie is not found!");
             return;
         }
 
-        searchSelectedMovie.detailsById();
+        selectedMovie.detailsById();
 
+        handleMovieOption(selectedMovie, movies);
+    }
+
+    private void handleMovieOption(Movie selectedMovie, List<Movie> movies) {
         System.out.print("\nNow, What do you want? : ");
-        int searchOption = sc.nextInt();
+        int option= sc.nextInt();
 
-        if (searchOption == 1) {
-            searchSelectedMovie.displayDetailsWithDescription();
-        } else if (searchOption == 2) {
-            boolean alreadyFavorite = false;
-            for (Movie movie : favoriteMovies) {
-                if (movie.getId() == searchSelectedMovie.getId()) {
+        if (option == 1) {
+            selectedMovie.displayDetailsWithDescription();
+        }
+        else if (option==2) {
+            boolean alreadyFavorite= false;
+            for(Movie movie: favoriteMovies){
+                if(movie.getId()==selectedMovie.getId()){
                     System.out.println("\nThis movie is already in your favorite list!");
-                    alreadyFavorite = true;
+                    alreadyFavorite=true;
                     break;
                 }
             }
-            if (!alreadyFavorite) {
-                favoriteMovies.add(searchSelectedMovie);
+            if(!alreadyFavorite){
+                favoriteMovies.add(selectedMovie);
                 System.out.println("\nMovie added to your favorite list!");
-            }
-        } else if (searchOption == 3) {
-            movies.remove(searchSelectedMovie);
+            }        }
+        else if (option==3){
+            movies.remove(selectedMovie);
             System.out.println("\nMovie removed from the list!");
-        } else {
+        }
+        else {
             System.out.println("\nInvalid Option!");
         }
-
     }
 }

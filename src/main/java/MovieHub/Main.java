@@ -23,7 +23,9 @@ public class Main {
                     break;
 
                 case 2:
-                    movieService.displayTopMovies(movies);
+                    System.out.print("How many top movies do you want to see? :");
+                    int n = sc.nextInt();
+                    movieService.displayTopMovies(movies, n);
                     break;
 
                 case 3:
